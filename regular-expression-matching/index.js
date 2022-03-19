@@ -5,43 +5,37 @@ const isMatchSymbol = function(symbol, cursor) {
     return symbol === cursor;
 }
 
-const findInFuture = function(symbol, p) {
-    for (let i = 0; i <= p.length; i++) {
-        if (!isMatchSymbol(symbol, p[i]) && p[i] !== '*' && p[i+1] !== '*') {
-            return;
-        }
-        if (isMatchSymbol(symbol, p[i])) {
-            return i;
-        }
-    }
-}
-
 var isMatch = function(s, p) {
-    let pCursor = 0;
-
-    for (let i=0; i < s.length; i++) {
-        if (p[pCursor + 1] === "*") {
-            if (!isMatchSymbol(s[i], p[pCursor])) {
-                pCursor += 2;
-                i = i - 1;
-            }
-        } else if (p[pCursor + 1] !== "*") {
-            if (!isMatchSymbol(s[i], p[pCursor])) {
-                return false;
-            }
-            pCursor += 1;
+    const dp = [];
+    for (let i = 0; i < s.length + 1; i++) {
+        dp.push([]);
+        for (let j = 0; j < p.length + 1; j++) {
+            dp[i].push(false);
         }
-        if (i === s.length - 1) {
-            if (p[pCursor + 1] === "*") {
-                if (pCursor < p.length - 2) {
-                    return false;
+    }
+
+    dp[0][0] = true;
+
+    for (let i = 1; i < p.length + 1; i++) {
+        if (p[i - 1] === "*") {
+            dp[0][i] = dp[0][i-2]
+        }
+    }
+
+    for (let i = 1; i < s.length + 1; i++) {
+        for (let j = 1; j < p.length + 1; j++) {
+            if (isMatchSymbol(s[i-1], p[j-1])) {
+                dp[i][j] = dp[i-1][j-1]
+            } else if (p[j - 1] === '*') {
+                if (isMatchSymbol(s[i - 1], p[j - 2])) {
+                    dp[i][j] = dp[i-1][j] || dp[i][j - 2]
+                } else {
+                    dp[i][j] = dp[i][j - 2]
                 }
-            } else if (pCursor < p.length - 1) {
-                return false
             }
         }
     }
 
-    return true;
+    return dp[s.length][p.length];
 };
 module.exports = isMatch;
