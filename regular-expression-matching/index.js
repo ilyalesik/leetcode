@@ -45,13 +45,3 @@ var isMatch = function(s, p) {
     return true;
 };
 module.exports = isMatch;
-
-//console.log(isMatch("mississippi", "mis*is*ip*.")); // true
-//console.log(isMatch("mississippi", "mis*is*p*.")); // false
-//console.log(isMatch("aab", "c*a*b")) // true
-//console.log(isMatch("aa", "a")); // false
-//console.log(isMatch("ab", ".*c")) // false
-//console.log(isMatch("aa", "a*")) // true
-//console.log(isMatch("aaa", "aaaa")) // false
-//console.log(isMatch("aaa", "a*a")) // true
-//console.log(isMatch("aaa", "ab*a*c*a")) // true
